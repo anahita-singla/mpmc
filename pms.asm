@@ -1,36 +1,36 @@
-dosseg ;para align
+
 .model small  ;64k of mem for code
 .stack 100h  ;stack space 100 bytes for prgrm
 .data ;variable storage section
-menu db '*****************MENU*********************$'
-menu1 db 'Press 1 for rikshw$'
-menu2 db 'Press 2 for cars$'
-menu3 db 'Press 3 for bus$'
-menu4 db 'Press 4 to show the record$'
-menu5 db 'Press 5 to delete the record$'
+menu db 'MENU: Press the option you want to select$'
+menu1 db '1 for rice$'
+menu2 db '2 for cheese$'
+menu3 db '3 for bread$'
+menu4 db '4 to show your cart$'
+menu5 db '5 to delete your cart$'
 menu6 db 'Press 6 to exit$'
-msg1 db 'Parking Is Full$'
+msg1 db 'Your cart Is Full$'
 msg2 db 'Wrong input$'
-msg3 db 'car$'
-msg4 db 'bus$'
+msg3 db 'cheese$'
+msg4 db 'bread$'
 msg5 db 'record$'
 msg6 db 'there is more space$'
 msg7 db 'the total amount is=$'
-msg8 db 'the total numbers of vehicles parked=$'
-msg9 db 'the total number of rikshws parked=$'
-msg10 db 'the total number of cars parked=$'
-msg11 db 'the total number of buses parked=$'
-msg12 db '***Record deleted successfully***$'
+msg8 db 'the total items bought=$'
+msg9 db 'the total number of rice kilos bought=$'
+msg10 db 'the total number of cheese packets bought=$'
+msg11 db 'the total number of bread packets bought=$'
+msg12 db '***Cart deleted successfully***$'
 amount dw 0   ;total amount 
-count dw  '0'  ;total vehicles parked
-amR db '200$'  ;amount of rikshaw
-amC db '300$'  ;amount of car
-amB db '400$'  ;amount of bus
+count dw  '0'  ;total items bought
+amR db '200$'  ;amount of rice
+amC db '300$'  ;amount of cheese
+amB db '400$'  ;amount of bread
 
 
-r dw '0' ;total number of rikshaw
-c db '0' ;total number of car
-b db '0' ;total number of bus
+r db '0' ;total number of rice
+c db '0' ;total number of cheese
+b db '0' ;total number of bread
 .code
 main proc
 mov ax,@data
@@ -48,6 +48,8 @@ int 21h
 mov dx,13 ;enter key ascii 13
 mov ah,2
 int 21h
+
+call newl
 
 ;printing menu statement
 mov dx,offset menu  
@@ -111,11 +113,11 @@ call newl
   ;now compare
 mov al,bl
 cmp al,'1'
-je rikshw
+je ricew
 cmp al,'2'
-je car
+je cheese
 cmp al,'3'
-je bus
+je bread
 cmp al,'4'
 je rec
 cmp al,'5'
@@ -131,12 +133,12 @@ int 21h
 call newl
 jmp while_
 
-rikshw:
-call rikshaw
+ricew:
+call riceaw
 
 
-car:
-call caar
+cheese:
+call cheesear
 
 
 rec:
@@ -147,8 +149,8 @@ del:
 call delt
 
 
-bus:
-call buss
+bread:
+call breads
 
 
 
@@ -162,16 +164,16 @@ main endp ;to end main procedure
 
 
 
-rikshaw proc
+riceaw proc
 cmp count,'8'  ;count<8 check condition
-jle rikshw1    ;
+jle ricew1    ;
 mov dx,offset msg1
 mov ah,9
 int 21h
 jmp while_
 jmp end_
 
-rikshw1:
+ricew1:
 mov ax,200
 add amount, ax
 mov dx,offset amR
@@ -185,16 +187,16 @@ jmp while_
 jmp end_
 
 
-caar proc
+cheesear proc
 cmp count,'8'
-jle car1
+jle cheese1
 mov dx,offset msg1
 mov ah,9
 int 21h
 jmp while_
 jmp end_
 
-car1:
+cheese1:
 mov ax,300
 add amount, ax
 mov dx,offset amC
@@ -209,16 +211,16 @@ jmp end_
 
 
 
-buss proc
+breads proc
 cmp count,'8'
-jle bus1
+jle bread1
 mov dx,offset msg1
 mov ah,9
 int 21h
 jmp while_
 jmp end_
 
-bus1:
+bread1:
 mov ax,400
 add amount, ax
 mov dx,offset amB
@@ -281,7 +283,7 @@ mov dx,offset msg9
 mov ah,9
 int 21h
 
-mov dx,r
+mov dl,r
 mov ah,2
 int 21h
 
